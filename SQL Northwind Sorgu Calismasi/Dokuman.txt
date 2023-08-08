@@ -1,0 +1,525 @@
+--ÇALIŞANLARIN SAYISINI LİSTELİYELİM
+
+
+--Categories --> Kategoriler
+--Customers --> Müşteriler
+--Employees --> Çalışanlar
+--EmployeeTerritories --> Çalışan Bölgeleri
+--Order Details --> sipariş detayları
+--Orders --> Siparişler
+--Products --> Ürünler
+--Region --> Bölge
+--Shippers --> Nakliye/Kargo Şirketleri
+--Suppliers--> Tedarikçiler
+--Territories--> Bölgeler
+
+--ÇALIŞAN SAYISINI BULALIM 
+Select COUNT(*) [Calısan Sayısı] 
+From Employees
+
+--MÜŞTERİ SAYISINI BULALIM
+Select COUNT(*) [Müşteri Sayısı] From Customers
+
+--SİPARİŞ TOPLAM SAYISI
+Select  * From Orders
+Select COUNT(*)[Sipariş Toplam Sayısı] From Orders
+
+--ÇALIŞANLARIN AD VE SOYADLARINI BULAN SORGU
+--a
+Select	FirstName,
+		LastName
+From	Employees
+--b
+Select  FirstName,
+		LastName,
+		FirstName + ' ' + LastName [Çalışan İsim ]
+From Employees
+
+--PATRONU LİSTELİYELİM VE ÇALIŞAN KADINLARI LİSTELEYELİM
+Select * From Employees
+Where TitleOfCourtesy ='Dr.'
+
+--a
+Select  * From Employees
+Where TitleOfCourtesy IN ('Ms.','Mrs.')
+
+--b
+Select * 
+From Employees
+Where TitleOfCourtesy = 'Ms.'
+OR TitleOfCourtesy = 'Mrs.'
+
+
+--ÇALIŞAN ERKEKLERİN SORGULARI
+
+--a
+Select  * From Employees
+Where TitleOfCourtesy ='Mr.'
+ 
+ --b İSİMLERİNİDE YAZDIRALIM ERKEKLERİN
+
+ Select FirstName,
+		LastName,
+		TitleOfCourtesy
+ From Employees
+ Where TitleOfCourtesy ='Mr.'
+
+ --ÇALIŞAN KADIN VE ERKEKLERİN SAYILARINI BULALIM // Patronu yani Dr. olanı çalışandan saymaz eklesek bile
+
+--a
+ Select COUNT(*) [Çalışşan Kadın ve Erkeklerin Sayısı]
+ From Employees
+ Where TitleOfCourtesy IN ('Ms.','Mrs.','Mr.');
+
+ --b AMAÇ AS KULLANIMINA DİKKAT ÇEKMEK
+ Select COUNT(*) AS CALISANSAYISI
+ From Employees
+ Where TitleOfCourtesy IN ('Ms.','Mrs.','Mr.');
+
+ --C Ayrı ayrı hesaplayalım
+
+ Select  COUNT(*) AS CALISANERKEK
+ From Employees 
+ Where TitleOfCourtesy = 'Mr.'
+
+ Select  COUNT(*) AS CALISANKADIN
+ From Employees 
+ Where TitleOfCourtesy IN ('Ms.','Mrs.');
+
+
+--ÇALIŞANLAR KAÇ FARKLI SEHİRDE YAŞIYOR
+--a
+Select DISTINCT 
+	City
+From Employees
+
+--b 
+Select  DISTINCT 
+	Country
+From Employees
+
+--DOĞUM TARİHİ 1960-05-29 DAN BÜYÜK OLANLAR	
+
+Select  * 
+From Employees
+Where BirthDate > '1960-05-29'
+
+--ADRESİNİN İÇİNDE HOUSE GEÇEN KİŞİLERİN SORGUSU 
+Select  
+		FirstName,
+		LastName,
+		Address
+From	Employees
+Where Address LIKE '%House%'
+
+--ADRESİNİN İÇİNDE OLD GEÇEN KİSİLERİ BULALALIM
+Select 
+		FirstName,
+		LastName,
+		Address
+From	Employees
+Where Address LIKE '%OLD%'
+
+--EXTENSION KOLUNU 3 HANELİ OLANLARI LİSTELİYELİM
+
+Select  Extension
+From	Employees
+Where LEN(Extension) =3;
+
+--EXTENSION KOLUNU 4 HANELİ OLANLARI LİSTELİYELİM
+Select Extension
+From Employees
+Where LEN(Extension) = 4;
+
+--ÇALIŞANLARIN YAŞLARINI BULALIM
+Select 
+	DATEDIFF(YEAR,BirthDate,GETDATE()) [YAS]
+From Employees
+ 
+ --ÇALIŞANLARIN İŞE KAÇ YAŞINDA BAŞLADIĞINI BULALIM
+
+ Select DATEDIFF(YEAR, BirthDate, HireDate) [ÇALIŞANLARIN İŞE BAŞLAMA TARİHİ]
+ From Employees;
+
+--REGION KOLONU NULL OLANLARI YAZDIRALIM
+
+ Select * From Employees
+ Where Region IS NULL;
+
+ --ÇALIŞANLARIN ADLARINI A'DAN Z'YE  VE Z'DEN A'YA DOĞRU SIRALAMA YAPALIM
+
+ Select FirstName
+ From	Employees
+ ORDER BY FirstName ASC;
+
+ Select	FirstName
+ From	Employees
+ ORDER BY FirstName DESC;
+
+ -- --ÇALIŞANLARIN ADLARINI A'DAN Z'YE  SOYADLARINI Z'DEN A'YA DOĞRU SIRALAMA YAPALIM
+
+ Select FirstName,
+		LastName
+ From	Employees
+ Order BY FirstName ASC,
+		  LastName DESC;
+
+Select	FirstName
+From	Employees
+ORDER BY FirstName ASC;
+
+Select	LastName
+From	Employees
+Order By LastName DESC;
+
+---ŞİRKET ÇALIŞANLARININ ORTALAMA YAŞI NEDİR?
+
+Select  
+	AVG (DATEDIFF(YEAR,BirthDate,GETDATE())) AS ORTALAMAYAS
+From Employees
+
+--MÜŞTERİ A İLE BAŞLAYAN ŞİRKETLER	HANGİLERİDİR?
+
+Select	*
+From Customers
+Where CompanyName LIKE 'A%'
+
+SELECT *
+FROM dbo.Customers
+WHERE CompanyName LIKE 'A%';
+
+--FAX VE REGION KISIMLARI NULL OLAN MÜŞTERİLER HANGİLERİDİR
+Select  * From Customers
+WHERE Region IS NULL 
+		AND Fax IS NULL;
+
+--CUSTOMERID'Sİ AA İLE BİTEN MÜŞTERİRİ SIRALAMA
+
+Select * From Customers
+WHERE CustomerID LIKE '%AA'
+
+--ÜRÜNLERİN KDV DAHİL VE KDV HARİÇ FİYATLARINI EKRANA YAZDIRALIM
+
+Select  
+	UnitPrice AS KDVSIZ,
+	(UnitPrice * 0.20 + UnitPrice) AS KDVLIFIYAT
+From Products
+
+--KDVSİ 10 TL DEN DÜŞÜK OLANLARI YAZDIRMA
+
+Select 
+	(UnitPrice * 0.20)
+From Products
+Where (UnitPrice * 0.20) < 10
+
+Select 
+	(UnitPrice * 0.20)
+From Products
+Where (UnitPrice * 0.20) > 10
+
+-- EN PAHALI 5 ÜRÜNÜN SORGUSU
+
+SELECT TOP 5
+       ProductName,
+       (UnitPrice * 0.18 + UnitPrice) AS KDVDahil
+FROM dbo.Products
+ORDER BY KDVDahil DESC;
+
+--EN UCUZ 5 ÜRÜNÜN ORTALAMASI NEDİR
+
+
+Select AVG(Tablo.UnitPrice) AS UMUT
+From
+(
+select TOP 5
+	UnitPrice
+From Products
+ORDER BY UnitPrice ASC
+
+)AS Tablo;
+
+
+--ÜRÜNLERİN ADLARINI BÜYÜTEREK YAZAR
+
+Select  UPPER(ProductName)
+From Products 
+
+
+--ÜRÜNLERİN ADLARINI KÜÇÜLTEREK YAZAR
+
+Select LOWER(ProductName)
+From Products
+
+--STOĞU OLMAYAN ÜRÜNLER
+
+Select * From Products
+Where UnitsInStock = 0;
+
+
+--STOK ADETİ 20 - 50 ARASINDA OLAN ÜRÜNLERİ GETİREN SORGUYU YAZALIM
+
+Select	ProductName,
+		UnitsInStock
+From Products
+Where UnitsInStock
+BETWEEN 20 AND 50
+ORDER BY UnitsInStock ASC;
+
+--EN PAHALI ÜRÜNÜN FİYATINI GETİRELİM
+
+Select MAX (UnitPrice) AS ENPAHALIURUN
+From Products
+
+--EN UCUZ ÜRÜNÜN FİYATINI GETİRELİM
+
+Select MIN (UnitPrice) AS ENUCUZURUN
+From Products
+
+--KAÇ ÇEŞİT ÜRÜN VAR
+Select  COUNT(ProductID)
+From Products
+
+--Tüm müşterileri listeleyen sorgu
+Select * From Customers 
+
+--En pahalı ürünün adı nedir?
+
+Select ProductName
+From Products
+Where UnitPrice = 
+(
+	Select MAX(UnitPrice)FROM Products
+);
+
+--faxs numarası olan müşterilerin sorgusu
+
+Select  * From Customers 
+Where Fax is not null
+
+--Manager unvanına sahip tüm müşterilerin sorgusu
+Select  * From Customers 
+Where ContactTitle LIKE '%Manager'
+
+--FR ile başlayan 5 karakter uzunluğunda olan müşterileri sorgulayınız
+
+Select * From Customers WHERE CustomerID LIKE 'FR___'
+
+--(171) alan kodlu telefon numarasına sahip müşterilerin sorgusu
+Select * From Customers
+Where Phone LIKE '(171)%'
+
+--	KategoriID'si 3 olan ve birim fiyatı 10 dan küçük olan tüm ürünlerin sorgusu
+
+Select * From Products
+Where CategoryID =3 and UnitPrice <10
+
+
+--Sehir bilgisi 'London' ve  'Seattle' olan tüm personelleri getiriniz.
+
+--a
+Select * From Employees 
+Where City in ('London','Seattle')
+
+--b
+Select * From Employees
+Where City = 'London'
+or	City ='Seattle'
+
+--3,5 ve 7 nolu katogorideki tüm ürünlerin sorgusu..
+--a
+Select * From Products
+Where CategoryID in ('3','5','7')
+
+--b
+Select * From Products
+Where CategoryID =3 or CategoryID = 5 or CategoryID =7
+
+
+--6 ve 9 nolu kategorideki ürünlerin dışında tüm ürünlerin gösteren sorgu..
+--a
+Select * From Products
+Where CategoryID !=6 And CategoryID !=9
+
+--b 
+Select * From Products
+Where  CategoryID not in(6,9)
+
+--Birim fiyatı 10 ile 20 arasında olan tüm ürünleri gösteren sorgu..
+
+--a
+Select  * From Products
+Where UnitPrice
+BETWEEN 10 AND 20
+
+--b
+Select * From Products
+Where UnitPrice >= 10 And UnitPrice <=20
+
+--1996-07-16 ile 1996-07-30 arasında sevk edilen satışları inceleyeniz
+
+Select * From Orders
+Where ShippedDate
+BETWEEN '1996-07-16' AND '1996-07-30'
+
+
+--Bölgesi tanımlı olmayan müşteriler
+Select * From Customers
+Where Region is NULL
+
+
+--Faks numarası olan müşteriler gösteren sorgu...
+Select * From Customers
+Where Fax is not null
+
+--Birim Miktar alanında boxes geçen tüm ürünleri gösteren sorgu..
+Select * From Products
+Where QuantityPerUnit LIKE '%boxes%'
+
+--Birim fiyatı 10 un altında olanları gösteren sorgu..
+Select * From Products
+Where UnitPrice <10
+
+--En düşük birim fiyatına sahip 5 ürünü gösteren sorgu
+Select TOP 5
+	 UnitPrice
+From Products
+ORDER BY UnitPrice ASC
+
+--En yüksek birim fiyatına sahip 10 ürünü gösteren sorgu..
+Select  TOP 10
+	UnitPrice
+From Products
+ORDER BY UnitPrice DESC
+
+--Personellerin ad,  soyad ve yaş bilgilerini gösteren sorgusu...
+
+Select 
+	FirstName,
+	LastName,
+	DATEDIFF(YEAR, BirthDate, GETDATE()) AS YAS
+From Employees
+
+
+--35 Gün içinde sevk edilemeyen satışları gösteren sorgu..
+Select * From Orders
+Where DATEDIFF(dd, OrderDate, ShippedDate)>35
+
+--Fransa ve almanyadaki müdürlerin(manager) adını telefonu listeleyiz(Fax değeri null olanlar hariç)
+Select
+	CompanyName,
+	Phone,
+	Fax
+From Customers
+Where Country in ('France','Germany') and ContactTitle LIKE '%Manager' and Fax is not Null
+
+--Müşterileri ülke ve şehir bilgisine göre sıralama yapınız.
+Select  * From Customers
+ORDER BY City asc,
+		Country asc
+
+
+--Birim fiyatı en yüksek olan ürünün kategori adını listeleyiniz (ALT SORGU)
+Select CategoryName
+From Categories
+Where CategoryID= 
+(
+	Select TOP 1 CategoryID From Products
+	ORDER BY UnitPrice DESC
+)
+
+--1996 yılında yapılan siparişlerin listesi
+
+--a
+Select * From Orders
+Where YEAR(OrderDate)=1996
+
+--b
+select * from Orders 
+where DATEPART(yy,OrderDate)=1996
+
+
+-- Her bir katagoride kaç ürün var listeleyeniz 
+Select * From Categories
+GROUP BY CategoryID
+
+--Satışı yapılmayan ürün listesi
+--a
+Select	ProductName,	
+		UnitsInStock,
+		Discontinued
+From Products
+Where Discontinued ='1'
+
+--b
+Select 
+		ProductName,	
+		UnitsInStock
+From Products
+Where Discontinued = 1
+AND	  Discontinued >0;
+
+
+--Kaç farklı ülkeye ihracat yapılmıştır
+--a
+Select DISTINCT Country AS ULKESAYISI
+From Customers
+
+--b
+Select COUNT(DISTINCT Country) 
+From Customers
+
+
+--ALFKI CustomerID'sine sahip müşterilerin sipariş sayısı nedir?
+
+
+Select COUNT(*) AS TOPLAM From Customers
+Where CustomerID ='ALFKI'
+
+
+--Butun nakliyecilerin listesi
+Select * From Suppliers
+
+--Berlinde olan nakliyecilerin listesi
+Select* From Suppliers
+Where City = 'Berlin'
+
+
+
+--INNER JOINLER 
+
+--INNER JOIN nedir?
+--SQL inner join SQL Join türlerinden en çok kullanılan tablo birleştirme türüdür.
+--SQL inner join iki veya daha fazla tablodaki ilişkili değerleri seçmek/birleştirmek için kullanılır.
+--Özetle; SQL INNER JOIN ifadesi ortak değere sahip tabloları birleştirmek için kullanılır.
+
+--Her ürün hangi kategoridedir
+
+Select  ProductName,
+		CategoryName
+From Products
+INNER JOIN Categories
+		ON Categories.CategoryID = Products.ProductID
+
+--Hangi tedarikçi hangi ürünü sağlıyor 
+
+Select * From Products
+INNER JOIN Suppliers 
+	ON Suppliers.SupplierID = Products.SupplierID;
+
+--Ürünlerin karşısına kategori getirme
+
+Select  * From Products
+INNER JOIN Categories 
+	ON Categories.CategoryID = Products.CategoryID
+
+--Her kategoriden kaç ürün var?
+
+
+Select 
+	c.CategoryName,
+	COUNT(p.ProductID) AS ToplamAdet
+From  Products p
+	INNER JOIN Categories c 
+	  ON c.CategoryID = p.CategoryID
+	  GROUP BY CategoryName;
+
